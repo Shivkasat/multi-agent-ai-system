@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent AI System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-left: 4px solid #667eea;
+            padding-left: 10px;
+        }
+        
+        input[type="file"] {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+        
+        .checkbox-container {
+            margin: 15px 0;
+        }
+        
+        .checkbox-container label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .status {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 4px solid #38a169;
+        }
+        
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .agents {
+            margin-bottom: 20px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .rationale {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .answer {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 1.05em;
+        }
+        
+        .documents h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .doc-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+        
+        .doc-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        
+        .doc-item h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .doc-item p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .doc-item a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .doc-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .doc-meta {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .logs-section {
+            margin-top: 40px;
+        }
+        
+        .log-entry {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .log-query {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .log-details {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .log-timestamp {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 8px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Multi-Agent AI System</h1>
+        <p class="subtitle">Controller-based routing with PDF RAG, Web Search, and ArXiv agents</p>
+        
+        <!-- PDF Upload Section -->
+        <div class="section">
+            <h2>📄 Upload PDF</h2>
+            <input type="file" id="pdfInput" accept=".pdf">
+            <button onclick="uploadPDF()">Upload & Index</button>
+            <button class="btn-secondary" onclick="loadSamples()">Load Sample PDFs</button>
+            <div id="uploadStatus" class="status"></div>
+        </div>
+        
+        <!-- Query Section -->
+        <div class="section">
+            <h2>💬 Ask a Question</h2>
+            <textarea id="queryInput" placeholder="Ask anything... Examples:
+• 'Who is the richest person in 2025?' (Web Search)
+• 'Recent papers on transformers' (ArXiv)
+• 'Summarize the uploaded PDF' (PDF RAG)
+"></textarea>
+            <div class="checkbox-container">
+                <label>
+                    <input type="checkbox" id="usePdfCheckbox">
+                    Force query uploaded PDFs only
+                </label>
+            </div>
+            <button onclick="askQuestion()">🚀 Ask AI</button>
+        </div>
+        
+        <!-- Results Section -->
+        <div id="results" class="results">
+            <div class="section">
+                <h2>📊 Results</h2>
+                
+                <div class="agents">
+                    <strong>🎯 Agents Used:</strong><br>
+                    <div id="agentBadges"></div>
+                </div>
+                
+                <div class="rationale">
+                    <strong>📝 Decision Rationale:</strong><br>
+                    <span id="rationale"></span>
+                </div>
+                
+                <div class="answer">
+                    <strong>✨ Answer:</strong><br><br>
+                    <div id="answer"></div>
+                </div>
+                
+                <div class="documents">
+                    <h3>📚 Retrieved Documents</h3>
+                    <div id="docs"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Logs Section -->
+        <div class="section logs-section">
+            <h2>📋 Decision Logs <button class="btn-secondary" onclick="loadLogs()">Refresh</button></h2>
+            <div id="logs"></div>
+        </div>
+    </div>
+
+    <script>
+        // Upload PDF
+        async function uploadPDF() {
+            const fileInput = document.getElementById('pdfInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a PDF file');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const status = document.getElementById('uploadStatus');
+            status.textContent = 'Uploading...';
+            status.className = 'status';
+            status.style.display = 'block';
+            
+            try {
+                const response = await fetch('/upload_pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    status.textContent = `✅ ${data.message} (${data.chunks_added} chunks)`;
+                    status.className = 'status success';
+                    fileInput.value = '';
+                } else {
+                    status.textContent = `❌ ${data.error}`;
+                    status.className = 'status error';
+                }
+            } catch (error) {
+                status.textContent = `❌ Upload failed: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+        
+        // Load Sample PDFs
+        async function loadSamples() {
+            const status = document.getElementById('uploadStatus');
+            status.textContent = 'Loading samples...';
+            status.className = 'status';
+            status.style.display = 'block';
+            
+            try {
+                const response = await fetch('/load_samples', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    status.textContent = `✅ ${data.message}`;
+                    status.className = 'status success';
+                } else {
+                    status.textContent = `❌ ${data.error}`;
+                    status.className = 'status error';
+                }
+            } catch (error) {
+                status.textContent = `❌ Failed: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+        
+        // Ask Question
+        async function askQuestion() {
+            const query = document.getElementById('queryInput').value.trim();
+            const usePdf = document.getElementById('usePdfCheckbox').checked;
+            
+            if (!query) {
+                alert('Please enter a question');
+                return;
+            }
+            
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '⏳ Processing...';
+            
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: query,
+                        use_uploaded_pdf: usePdf
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Show results
+                document.getElementById('results').style.display = 'block';
+                
+                // Show agents
+                const badgesHtml = data.agents_used.map(a => 
+                    `<span class="badge">${a}</span>`
+                ).join('');
+                document.getElementById('agentBadges').innerHTML = badgesHtml;
+                
+                // Show rationale
+                document.getElementById('rationale').textContent = data.rationale;
+                
+                // Show answer
+                document.getElementById('answer').textContent = data.answer;
+                
+                // Show documents
+                if (data.documents && data.documents.length > 0) {
+                    const docsHtml = data.documents.map(doc => `
+                        <div class="doc-item">
+                            <h4>${doc.title}</h4>
+                            <p>${doc.snippet}</p>
+                            ${doc.authors ? `<p class="doc-meta">👤 ${doc.authors}</p>` : ''}
+                            ${doc.published ? `<p class="doc-meta">📅 ${doc.published}</p>` : ''}
+                            ${doc.similarity ? `<p class="doc-meta">🎯 Similarity: ${(doc.similarity * 100).toFixed(1)}%</p>` : ''}
+                            ${doc.url ? `<p><a href="${doc.url}" target="_blank">🔗 ${doc.url}</a></p>` : ''}
+                        </div>
+                    `).join('');
+                    document.getElementById('docs').innerHTML = docsHtml;
+                } else {
+                    document.getElementById('docs').innerHTML = '<p>No documents retrieved</p>';
+                }
+                
+                // Scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+                
+                // Reload logs
+                loadLogs();
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 Ask AI';
+            }
+        }
+        
+        // Load Logs
+        async function loadLogs() {
+            try {
+                const response = await fetch('/logs?limit=10');
+                const data = await response.json();
+                
+                const logsDiv = document.getElementById('logs');
+                
+                if (data.logs && data.logs.length > 0) {
+                    const logsHtml = data.logs.reverse().map(log => `
+                        <div class="log-entry">
+                            <div class="log-query">"${log.query}"</div>
+                            <div class="log-details">
+                                <strong>Decision:</strong> ${log.decision}<br>
+                                <strong>Rationale:</strong> ${log.rationale}<br>
+                                <strong>Agents:</strong> ${log.agents_called.join(', ')}
+                            </div>
+                            <div class="log-timestamp">${new Date(log.timestamp).toLocaleString()}</div>
+                        </div>
+                    `).join('');
+                    logsDiv.innerHTML = logsHtml;
+                } else {
+                    logsDiv.innerHTML = '<p>No logs yet</p>';
+                }
+            } catch (error) {
+                console.error('Failed to load logs:', error);
+            }
+        }
+        
+        // Enter key support
+        document.getElementById('queryInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                askQuestion();
+            }
+        });
+        
+        // Load logs on page load
+        loadLogs();
+    </script>
+</body>
+</html>

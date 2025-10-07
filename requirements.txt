@@ -1,0 +1,10 @@
+flask==3.0.0
+groq==0.4.2
+tavily-python==0.3.3
+arxiv==2.1.0
+python-dotenv==1.0.0
+PyMuPDF==1.23.8
+sentence-transformers==2.2.2
+faiss-cpu==1.7.4
+numpy==1.24.3
+werkzeug==3.0.1
