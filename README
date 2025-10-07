@@ -1,0 +1,94 @@
+🤖 Multi-Agent AI System Overview
+
+This is a Flask-based intelligent system designed to handle user queries dynamically by leveraging specialized AI agents. It intelligently decides which agent to use based on the type of query and provides relevant, accurate, and real-time answers.
+
+🌟 Core Functionality
+
+Controller Agent
+
+Acts as the system brain.
+
+Uses Groq-powered LLM (Llama 3.3) to route queries intelligently.
+
+PDF RAG Agent
+
+Handles uploaded PDFs.
+
+Uses FAISS for vector-based search and Sentence-Transformers for embeddings.
+
+Ideal for detailed domain-specific queries (e.g., lecture notes, manuals).
+
+Web Search Agent
+
+Fetches real-time information via Tavily API.
+
+Perfect for current events or trending topics.
+
+ArXiv Agent
+
+Searches academic papers through ArXiv API.
+
+Great for research and technical questions.
+
+Auto Routing
+
+System automatically decides which agent(s) to use based on query type.
+
+Users can optionally force searches on PDFs only.
+
+Decision Logs
+
+All routing decisions are tracked in logs/decisions.json for audit and analysis.
+
+📌 Usage Workflow
+
+Upload PDFs
+
+Click "Choose File" → Select PDF → Click "Upload & Index"
+
+System indexes the PDF for semantic search.
+
+Ask Questions
+
+Examples:
+
+"Explain binary search" → Routed to PDF RAG
+
+"Who is richest person 2025?" → Routed to Web Search
+
+"Recent papers on AI" → Routed to ArXiv
+
+Optional: Force search only on uploaded PDFs.
+
+View Results
+
+Answers are displayed based on the most relevant agent’s response.
+
+🛠️ Tech Stack
+
+Backend: Flask, Python
+
+LLM: Groq (Llama 3.3)
+
+Vector Database: FAISS
+
+Embeddings: Sentence-Transformers
+
+PDF Processing: PyMuPDF
+
+Web Search: Tavily API
+
+Academic Search: ArXiv API
+
+Project structure :
+
+app.py                  # Main Flask application
+create_sample_pdfs.py   # Script to generate sample PDFs
+templates/
+  └── index.html        # Frontend
+sample_pdfs/            # Auto-generated CSE PDFs
+uploads/                # User-uploaded PDFs
+logs/
+  └── decisions.json    # Query routing logs
+.env                    # API keys
+requirements.txt        # Dependencies
